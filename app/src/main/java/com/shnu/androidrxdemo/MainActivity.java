@@ -1,8 +1,13 @@
-package com.shnu.animation.androidrxdemo;
+package com.shnu.androidrxdemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.shnu.androidrxdemo.simple.DownStream;
+import com.shnu.androidrxdemo.simple.RxPlugin;
+import com.shnu.androidrxdemo.simple.UpStream;
+import com.shnu.animation.androidrxdemo.R;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -15,9 +20,13 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+/**
+ * @author Administrator
+ */
 public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
             public String push() {
                 return "山寨RxJava";
             }
-        }).subscribe(rxPlugin.createDown(new DownStream() {
+        }).subscribe(new DownStream() {
             @Override
             public void pull(String string) {
                 Log.w(TAG,string);
             }
-        }));
+        });
 //        pureRxSample();
         //        rxCustomer();
         //        rxThreadSchedule();
