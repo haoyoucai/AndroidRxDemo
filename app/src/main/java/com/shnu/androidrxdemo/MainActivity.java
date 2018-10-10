@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.shnu.androidrxdemo.simple.DownStream;
-import com.shnu.androidrxdemo.simple.RxPlugin;
-import com.shnu.androidrxdemo.simple.UpStream;
 import com.shnu.animation.androidrxdemo.R;
 
 import io.reactivex.Observable;
@@ -27,31 +24,10 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RxPlugin rxPlugin = new RxPlugin();
-        rxPlugin.createUP(new UpStream() {
-            @Override
-            public String push() {
-                return "山寨RxJava";
-            }
-        }).subscribe(new DownStream() {
-            @Override
-            public void pull(String string) {
-                Log.w(TAG,string);
-            }
-        });
-//        pureRxSample();
-        //        rxCustomer();
-        //        rxThreadSchedule();
-        //        rxonErrorResumeNext();
-
-        //        rxMap();
-//        rxMapSuper();
-
     }
 
     // 最简单的RxJava 代码

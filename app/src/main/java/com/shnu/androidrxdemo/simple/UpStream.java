@@ -9,9 +9,10 @@ public interface UpStream {
 
     /**
      * 上游事件
+     * {@link Emitter 上游发射器}
      *
-     * @return
+     * @param emitter 上游发射器
      */
-    String push();
+    void push(Emitter emitter);
 
 }

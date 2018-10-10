@@ -20,6 +20,7 @@ public class RxPlugin {
 
     /**
      * 构建上游事件
+     *
      * @param upStream
      * @return
      */
@@ -30,16 +31,20 @@ public class RxPlugin {
 
     /**
      * 关联下游事件
+     *
      * @param downStream
      */
-    public void subscribe(DownStream downStream) {
+    public void subscribe(final DownStream downStream) {
         this.downStream = downStream;
         if (upStream == null || downStream == null) {
             return;
         }
-        String str;
-        str = upStream.push();
-        downStream.pull(str);
+        upStream.push(new Emitter() {
+            @Override
+            public void onNext(String emitter) {
+                downStream.pull(emitter);
+            }
+        });
     }
 
 }
