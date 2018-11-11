@@ -5,6 +5,8 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * @author： 沈丹来 shendanlai@tniu.com
@@ -15,46 +17,67 @@ public class RxTest {
 
     public static void main(String[] args) {
 
-        /**
-         * observable 可订阅的（上游事件）
-         */
 
-        Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
+        //最简单的Map的使用
+//        Observable.create(new ObservableOnSubscribe<String>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+//                emitter.onNext("Welcome");
+//                emitter.onNext("To");
+//                emitter.onNext("RxJava");
+//
+//            }
+//        }).map(new Function<String, Integer>() {
+//            @Override
+//            public Integer apply(String s) throws Exception {
+//                return s.length();
+//            }
+//        }).subscribe(new Consumer<Integer>() {
+//            @Override
+//            public void accept(Integer integer) throws Exception {
+//                System.out.println(integer);
+//            }
+//        });
+
+        //减少map的耦合性
+        Observable.create(new ObservableOnSubscribe<String>() {
             @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) {
-                emitter.onNext(1);
-                emitter.onNext(2);
+            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                emitter.onNext("Welcome");
+                emitter.onNext("To");
+                emitter.onNext("RxJava");
 
+            }
+        }).map(new EncryptFun()).subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String string) throws Exception {
+                System.out.println(string);
             }
         });
-        /**
-         * observer 下游事件
-         */
-        Observer observer = new Observer() {
-            @Override
-            public void onSubscribe(Disposable d) {
+    }
 
+}
+
+
+/**
+ * 加密操作
+ */
+class EncryptFun implements Function<String, String> {
+    @Override
+    public String apply(String s) throws Exception {
+        char[] chars = s.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            //由ASCII码表得知大写字母是65-90,小写字母是97-122
+            if ((chars[i] >= 65 && chars[i] < 90) || (chars[i] >= 97 && chars[i] < 122)) {
+                chars[i] = (char) (chars[i] + 1);
             }
-
-            @Override
-            public void onNext(Object o) {
-                System.out.println("接收到上游的内容：" + o.toString());
+            if (chars[i] == 90) {
+                chars[i] = 'a';
             }
-
-            @Override
-            public void onError(Throwable e) {
-
+            if (chars[i] == 122) {
+                chars[i] = 'A';
             }
-
-            @Override
-            public void onComplete() {
-                System.out.println("onComplete");
-
-            }
-        };
-        /**
-         * 上下游事件互相订阅，关联
-         */
-        observable.subscribe(observer);
+        }
+        return new String(chars);
     }
 }

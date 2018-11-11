@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         //        rxThreadSchedule();
         //        rxonErrorResumeNext();
 
-        //        rxMap();
+                rxMap();
         rxMapSuper();
 
     }
