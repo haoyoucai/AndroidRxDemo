@@ -3,7 +3,9 @@ package com.shnu.androidrxdemo.rx;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -18,28 +20,6 @@ public class RxTest {
     public static void main(String[] args) {
 
 
-        //最简单的Map的使用
-//        Observable.create(new ObservableOnSubscribe<String>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-//                emitter.onNext("Welcome");
-//                emitter.onNext("To");
-//                emitter.onNext("RxJava");
-//
-//            }
-//        }).map(new Function<String, Integer>() {
-//            @Override
-//            public Integer apply(String s) throws Exception {
-//                return s.length();
-//            }
-//        }).subscribe(new Consumer<Integer>() {
-//            @Override
-//            public void accept(Integer integer) throws Exception {
-//                System.out.println(integer);
-//            }
-//        });
-
-        //减少map的耦合性
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
@@ -48,10 +28,10 @@ public class RxTest {
                 emitter.onNext("RxJava");
 
             }
-        }).map(new EncryptFun()).subscribe(new Consumer<String>() {
+        }).map(new EncryptFun()).map(new EncryptFun()).subscribe(new Consumer<String>() {
             @Override
-            public void accept(String string) throws Exception {
-                System.out.println(string);
+            public void accept(String s) throws Exception {
+                System.out.println(s);
             }
         });
     }

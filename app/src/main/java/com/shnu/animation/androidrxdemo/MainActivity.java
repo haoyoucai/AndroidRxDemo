@@ -23,13 +23,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //        rxCustomer();
-        //        rxThreadSchedule();
-        //        rxonErrorResumeNext();
+        rxFlatMap();
+    }
 
-                rxMap();
-        rxMapSuper();
-
+    /**
+     * Flat
+     */
+    public void rxFlatMap() {
+        Observable.just("Welcome", "To", "RxJava").flatMap(new Function<String, ObservableSource<Character>>() {
+            @Override
+            public ObservableSource<Character> apply(final String s) throws Exception {
+                return Observable.create(new ObservableOnSubscribe<Character>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Character> emitter) throws Exception {
+                        char[] chars = s.toCharArray();
+                        for (int i = 0; i < s.length(); i++) {
+                            emitter.onNext(chars[i]);
+                        }
+                    }
+                });
+            }
+        }).subscribe(new Consumer<Character>() {
+            @Override
+            public void accept(Character character) throws Exception {
+                Log.w("Rx--FlatMap",character.toString());
+            }
+        });
     }
 
     // 最简单的RxJava 代码
@@ -128,15 +147,15 @@ public class MainActivity extends AppCompatActivity {
                 emitter.onNext("Sunday is the seventh day of the week!");
             }
         })
-                  .subscribeOn(AndroidSchedulers.mainThread())
-                  .observeOn(Schedulers.newThread())
-                  .subscribe(new Consumer<String>() {
-                      @Override
-                      public void accept(String s) throws Exception {
-                          Log.e(TAG, "consumer" + s + "   " + Thread.currentThread().getName());
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e(TAG, "consumer" + s + "   " + Thread.currentThread().getName());
 
-                      }
-                  });
+                    }
+                });
     }
 
     //发生Error 继续运行
@@ -277,19 +296,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //
-
-    public void rxFlatMap() {
-        Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-
-            }
-        }).flatMap(new Function<String, ObservableSource<?>>() {
-            @Override
-            public ObservableSource<?> apply(String s) throws Exception {
-                return null;
-            }
-        });
-    }
 }
