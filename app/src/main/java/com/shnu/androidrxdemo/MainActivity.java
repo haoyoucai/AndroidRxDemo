@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.shnu.animation.androidrxdemo.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -33,9 +35,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         etCenter = (EditText) findViewById(R.id.tv);
-        rxFlatMap();
+        rxObserverBuffer();
     }
 
+
+    public void rxObserverBuffer(){
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
+                for (int i = 0; i < 1000; i++) {
+                    emitter.onNext(i);
+                    Log.e("Rx--UP" + Thread.currentThread().getName(), i+"");
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                  .observeOn(Schedulers.newThread())
+                  .subscribe(new Consumer<Integer>() {
+                      @Override
+                      public void accept(Integer integer) throws Exception {
+                          Thread.sleep(20);
+                          Log.e("Rx--FlatMap" + Thread.currentThread().getName(), integer.toString());
+                      }
+                  });
+
+
+    }
+
+    /**
+     * RxJava   just操作符
+     */
+    public void rxJust() {
+        List<String> list = new ArrayList<>();
+        list.add("Welcome");
+        list.add("To");
+        list.add("RxJava");
+        Observable.just(list).subscribe(new Consumer<List<String>>() {
+            @Override
+            public void accept(List<String> strings) throws Exception {
+
+            }
+        });
+
+    }
 
     /**
      * RxJava  Flat map 的使用
@@ -50,23 +91,22 @@ public class MainActivity extends AppCompatActivity {
                         char[] chars = s.toCharArray();
                         for (int i = 0; i < s.length(); i++) {
                             emitter.onNext(chars[i]);
-                            Thread.sleep((long) (Math.random() * 1000));
+                            Thread.sleep(300);
                         }
                     }
-                }).subscribeOn(Schedulers.newThread());
+                });
             }
         }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Character>() {
-                    @Override
-                    public void accept(final Character character) throws Exception {
-                        etCenter.setText(etCenter.getText().toString() + character.toString());
-                        etCenter.setSelection(etCenter.getText().length());
-                        Log.e("Rx--FlatMap" + Thread.currentThread().getName(), character.toString());
-                    }
-                });
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Consumer<Character>() {
+                      @Override
+                      public void accept(final Character character) throws Exception {
+                          etCenter.setText(etCenter.getText().toString() + character.toString());
+                          etCenter.setSelection(etCenter.getText().length());
+                          Log.e("Rx--FlatMap" + Thread.currentThread().getName(), character.toString());
+                      }
+                  });
     }
-
 
     /**
      * RxJava  Flat map 的使用
@@ -87,15 +127,15 @@ public class MainActivity extends AppCompatActivity {
                 }).subscribeOn(Schedulers.newThread());
             }
         }).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Character>() {
-                    @Override
-                    public void accept(final Character character) throws Exception {
-                        etCenter.setText(etCenter.getText().toString() + character.toString());
-                        etCenter.setSelection(etCenter.getText().length());
-                        Log.e("Rx--FlatMap" + Thread.currentThread().getName(), character.toString());
-                    }
-                });
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Consumer<Character>() {
+                      @Override
+                      public void accept(final Character character) throws Exception {
+                          etCenter.setText(etCenter.getText().toString() + character.toString());
+                          etCenter.setSelection(etCenter.getText().length());
+                          Log.e("Rx--FlatMap" + Thread.currentThread().getName(), character.toString());
+                      }
+                  });
     }
 
     // 最简单的RxJava 代码
@@ -194,15 +234,15 @@ public class MainActivity extends AppCompatActivity {
                 emitter.onNext("Sunday is the seventh day of the week!");
             }
         })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(Schedulers.newThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        Log.e(TAG, "consumer" + s + "   " + Thread.currentThread().getName());
+                  .subscribeOn(AndroidSchedulers.mainThread())
+                  .observeOn(Schedulers.newThread())
+                  .subscribe(new Consumer<String>() {
+                      @Override
+                      public void accept(String s) throws Exception {
+                          Log.e(TAG, "consumer" + s + "   " + Thread.currentThread().getName());
 
-                    }
-                });
+                      }
+                  });
     }
 
     //发生Error 继续运行
