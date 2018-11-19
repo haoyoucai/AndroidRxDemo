@@ -6,16 +6,30 @@
     android:layout_height="match_parent"
     tools:context="com.shnu.androidrxdemo.MainActivity">
 
-    <EditText
-        android:background="@null"
-        android:id="@+id/tv"
+    <!--<EditText-->
+    <!--android:background="@null"-->
+    <!--android:id="@+id/tv"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textSize="20sp"-->
+    <!--android:textCursorDrawable="@drawable/color_cursor"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+    <TextView
+        android:id="@+id/tv_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#ff5050"
+        android:padding="10dp"
+        android:text="Request"
         android:textSize="20sp"
-        android:textCursorDrawable="@drawable/color_cursor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>
